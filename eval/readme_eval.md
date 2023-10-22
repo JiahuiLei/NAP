@@ -1,6 +1,6 @@
 # Standalone Evaluation Pipeline
 
-Now this sub-directory is not fully standalone, which have dependencies under the project root, should clean the dependency there later.
+Now this sub-directory is not fully standalone, which has dependencies under the project root, should clean the dependency there later.
 
 1. Inference trained model to generate objects: `gen_diffusion.ipynb`. This notebook assume you have a trained model saved under log dir. After running this notebook, you will see two folders under `log/test/`: `G` saved all generated objects. `Viz` have some gifs visualization. **You should also have to run `save_gt.ipynb`** to save the ground truth objects for evaluation.
 

@@ -1,6 +1,6 @@
 # *NAP*: Neural Articulated Object Prior
 
-[project page](https://www.cis.upenn.edu/~leijh/) Neurips-2023
+[project page](https://www.cis.upenn.edu/~leijh/projects/nap/) Neurips-2023
 
 **[2023.Oct.21] Note: because we are a little busy recently, we are still working on the full releaseing, currently the repo is a preview, supporting basic training and inference**
 
