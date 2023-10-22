@@ -1,0 +1,62 @@
+# platform: linux-64
+# cython # ==0.29.2
+sympy #==1.11.1
+ipykernel>=6.0.0
+yacs
+tensorboardX # ==2.0
+tensorboard # ==2.4.1 #2.2.0
+# tensorboard-plugin-wit==1.6.0.post2
+scikit-image
+scipy # ==1.8.1
+numpy==1.23.0
+xlwt
+xlrd
+pyrender #==0.1.43
+open3d #==0.9.0.0
+# torchdiffeq==0.1.1
+moviepy # ==1.0.3
+shapely==1.8.4
+# torch-cluster #==1.5.9
+transforms3d
+trimesh #==3.12.6
+pandas
+setuptools
+# sklearn
+scikit-learn
+opencv-python
+jupyter
+jupyterlab
+coloredlogs
+objgraph
+pyquaternion
+seaborn
+h5py
+rtree
+# pymeshfix
+# pyacvd
+tqdm
+black
+flake8
+openpyxl
+# chumpy
+# lpips
+scikit-image #==0.14.2
+tensorboard-plugin-profile
+imageio==2.25.0
+
+easydict #==1.9
+matplotlib #==3.2.1
+plotly #==4.7.1
+plyfile #==0.7.2
+pytest #==6.2.1
+# pymeshlab
+gitdb
+gitpython
+# mapbox-earcut
+triangle
+pickleshare==0.7.5
+
+# healpy
+# gorilla-core
+
+# pytorch-fast-transformers==0.4.0

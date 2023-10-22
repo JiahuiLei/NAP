@@ -1,0 +1,80 @@
+method: s1.5_shape_ae
+runner: solver_v2
+gpu: 0
+modes: ["train", "val"]
+
+model:
+  model_name: arti_partshape_ae
+
+  # everthing is a smooth
+  w_sdf: 1.0
+  w_reg: 0.001
+
+  N_pe: 8
+  decoder:
+    dim: 51
+    c_dim: 128
+    z_dim: 0
+    hidden_size: 256
+    leaky: True
+  encoder:
+    c_dim: 128
+    dim: 3
+    hidden_dim: 512
+
+dataset:
+  num_workers: 8
+  dataset_name: partnet_m_parts
+  dataset_proportion: [1.0, 1.0] # [0.1, 0.1]
+  data_root: ./data/partnet-mobility-sdf
+  split_path: ./resource/partnet_m_partkeys.json
+
+  n_uniform: 4096
+  n_nearsurface: 4096
+  n_pcl: 1024
+
+  chunk:
+    size: 5000
+    pcl: 10
+    uniform: 10
+    near: 10
+
+training:
+  # maximum_iters_per_ep: 1000
+  # grad_clip: 100.0
+  grad_clip: 10000000.0 # 500.0
+  loss_clip: 100.0
+  optim:
+    all:
+      lr: 0.0001
+      decay_schedule: [100000, 150000, 200000] # ! this if for of
+      decay_factor: [0.3, 0.3, 0.3]
+      lr_min: 0.00000001
+  total_iter: 500000
+  batch_size: 32 # 64
+  total_epoch: 0
+
+evaluation:
+  eval_every_iter: 1000 # if this is smaller than the total ep len, will eval after an ep
+  iou_threshold: 0.5
+  batch_size: 8
+
+logging:
+  log_dir: s1.5_partshape_ae
+  loggers: ["mesh", "image", "hist", "video", "xls"]
+  viz_nontrain_interval: 20 #50
+  viz_iter_interval: 500 #100 # 300
+  checkpoint_iter: 10000
+  model_select_metric: iou
+  model_select_larger: true
+  viz_one_per_batch: True
+
+generation:
+  occ_if_meshing_cfg:
+    threshold: 0.5
+    batch_pts: 8000
+    simplify_nfaces: 5000
+    resolution_0: 64
+    upsampling_steps: 3
+    use_sampling: false
+    refinement_step: 0

@@ -1,0 +1,124 @@
+method: v6.1_diffusion
+runner: solver_v2
+gpu: 0
+modes: ["train"]
+
+model:
+  model_name: arti_ddpm_v2
+
+  diffusion_config:
+    # scheduling: cosine
+    M: 1000
+    beta_min: 0.001
+    beta_max: 0.02
+
+  denoiser_type: v60
+  denoiser:
+    V_dims: [1, 3, 3, 128]
+    E_sym_dims: [6, 4]
+    E_dir_dim: 3
+
+    v_conv_dims: [512, 512, 512, 512, 512, 512]
+    e_conv_dims: [512, 512, 512, 512, 512, 512]
+    p_pe_dim: 100
+    t_pe_dim: 200
+    use_bn: False
+    c_atten_head: 32
+    v_out_hidden_dims: [256, 256, 256]
+    e_out_hidden_dims: [256, 128, 64]
+    connectivity_guidance_factor: 10.0
+    E_guidance: False
+
+  #######################################
+  # Below is the pre-trained decoder
+  ######################################
+  part_shape_prior:
+    pretrained_shapeprior_path: ./log/s1.5_partshape_ae/checkpoint/737.pt
+    sdf_decoder_type: decoder
+    N_pe: 8
+    sdf_decoder:
+      dim: 51
+      c_dim: 128
+      z_dim: 0
+      hidden_size: 256
+      leaky: True
+  ####################################
+
+dataset:
+  num_workers: 8
+  dataset_name: partnet_m_struct_v5
+  data_root: ./data/partnet_mobility_graph_v4
+  split_path: ./resource/partnet_m_split.json
+  dataset_proportion: [1.0] #[0.15] # [0.1, 0.1]
+
+  balance_sampling: False
+  embedding_precompute_path: ./resource/codebook/s1.5_partshape_ae_737.npz
+  embedding_index_file: ./resource/partnet_m_partkeys.json
+
+  permute_nodes: True
+
+  scale_all: True
+  scale_mode: max
+
+  cates: ["all"] #all, storagefurniture
+  max_K: 8
+
+  # n_pcl: 0
+  # noise_std: 0.001
+
+training:
+  use_saperate_loss: True
+  N_t_training: 10 #20
+  # w_connectivity: 1.0
+  # w_e_T: 1.0
+  # w_e_plucker: 1.0
+  # w_e_lim: 1.0
+
+  grad_clip: 10000000.0 # 500.0
+  loss_clip: 100.0
+  optim:
+    all:
+      lr: 0.0001
+      decay_schedule: [40000, 70000, 90000]
+      decay_factor: [0.3, 0.3, 0.3]
+      lr_min: 0.00000001
+  total_iter: 120000 # 100000
+  batch_size: 64 #24 # 64
+  total_epoch: 0
+
+evaluation:
+  eval_every_iter: 1000 # if this is smaller than the total ep len, will eval after an ep
+  iou_threshold: 0.5
+  batch_size: 8
+
+logging:
+  log_dir: v6.1_diffusion
+  loggers: ["mesh", "image", "hist", "video", "xls"]
+  viz_nontrain_interval: 10 #50
+  viz_iter_interval: 1000 # 500 #100 # 300
+  checkpoint_iter: 5000
+
+  viz_so3_first: 0.01
+  viz_t_first: 0.01
+
+  model_select_metric: iou
+  model_select_larger: true
+
+  viz_one_per_batch: False
+  viz_dpi: 100
+  viz_frame: 10
+
+  ignore_loading_key: ["sdf_decoder"]
+
+  save_latest_interval: 25
+
+generation:
+  N_gen: 2
+  occ_if_meshing_cfg:
+    threshold: 0.5
+    batch_pts: 30000
+    simplify_nfaces: 3000
+    resolution_0: 40
+    upsampling_steps: 2
+    use_sampling: false
+    refinement_step: 0
